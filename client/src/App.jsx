@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -16,10 +17,11 @@ function App() {
   }, []);
 
   const addExpense = async () => {
+    if (!title || !amount) return alert("Fill all fields");
+
     await axios.post("http://localhost:5000/api/expenses", {
       title,
       amount,
-      type: "expense",
     });
 
     setTitle("");
@@ -28,7 +30,7 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div className="container">
       <h1>Expense Tracker</h1>
 
       <input
@@ -37,20 +39,15 @@ function App() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <br /><br />
-
       <input
         placeholder="Amount"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
 
-      <br /><br />
-
       <button onClick={addExpense}>Add Expense</button>
 
       <h2>Expenses</h2>
-
       {expenses.map((e) => (
         <p key={e._id}>
           {e.title} - ₹{e.amount}
